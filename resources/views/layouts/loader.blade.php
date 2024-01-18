@@ -1,0 +1,1 @@
+<div class="position-fixed top-50 start-50 translate-middle spinner-grow text-primary" role="status" id="loader"></div>

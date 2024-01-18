@@ -1,0 +1,187 @@
+:root{
+    --main-color:#007bffb9;
+}
+.right-section::-webkit-scrollbar {
+    display: none;
+  }
+.main-color{
+    color: #007bffb9;
+}
+.border-x{
+    width: 100%;
+    height: 4px;
+    background-color: var(--main-color);
+    border-radius: 6px;
+}
+.button-x:hover{
+    background-color: aliceblue !important;
+}
+.setting-x-icon:hover{
+    background-color: aliceblue;
+}
+.sidebar-x{
+    background-color: white !important;
+}
+.sidebar-x:hover a{
+    background-color: aliceblue;
+}
+.text-area{
+    resize:none;
+    font-size: 18px !important;
+    overflow: hidden !important;
+}
+.text-area:focus{
+    outline: none !important;
+    box-shadow: none !important;
+}
+.text-area::placeholder{
+    font-size: 20px;
+}
+.focus-none:focus{
+    outline:none !important;
+    box-shadow:none !important;
+}
+.content-box{
+    box-sizing: content-box;
+}
+.button-x-fill:hover{
+    background-color: aliceblue;
+    fill: var(--main-color);
+}
+.react-button {
+    margin:0;
+    padding: 0;
+}
+.react-button svg{
+    width: 20px;
+    height: 20px;
+    padding: .25rem;
+}
+.react-button span{
+    font-size: 11px;
+}
+.react-button-1:hover svg{
+    background-color: aliceblue;
+    fill: var(--main-color);
+}
+.react-button-1:hover span{
+    color: var(--main-color) !important;
+}
+.react-button-2:hover svg{
+    background-color: var(--bs-success-bg-subtle);
+    fill: var(--bs-success);
+}
+.react-button-2:hover span{
+    color: var(--bs-success) !important;
+}
+.react-button-3:hover svg{
+    background-color: var(--bs-danger-bg-subtle);
+    fill: var(--bs-danger);
+}
+.react-button-3:hover span{
+    color: var(--bs-danger) !important;
+}
+.react-button-4:hover svg{
+    background-color: aliceblue;
+    fill: var(--main-color);
+}
+.react-button-4:hover span{
+    color: var(--main-color) !important;
+}
+.button-x-info:hover svg{
+    background-color: aliceblue;
+    fill: var(--main-color);
+}
+.button-x-info-primary:hover svg{
+    background-color: rgb(193, 215, 255);
+    fill: var(--main-color);
+}
+.icon-size{
+    width: 20px;
+    height: 20px;
+    padding: .75rem;
+}
+.backdrop-filter{
+    -webkit-backdrop-filter: blur(5px);
+    backdrop-filter: blur(5px);
+}
+.z-index-0{
+    z-index: -1;
+}
+.z-index-1090{
+    z-index: 1090;
+}
+.notification-numbers{
+    position: absolute !important;
+    top: -5px !important;
+    right: -2px !important;
+    width: 15px;
+    height: 15px;
+    text-align: center;
+}
+.bottom-navbar{
+    opacity: 0.5;
+}
+.post-x:hover{
+    background-color: var(--bs-light);
+}
+.light-hover:hover{
+    background-color: var(--bs-light) !important;
+}
+.more-light-hover:hover{
+    background-color: #e5e5e5 !important;
+}
+.leather-x{
+    bottom: 60px;
+}
+.post-video{
+    border-radius: 20px;
+    object-fit: cover;
+}
+.max-width-200{
+    max-width: 200px;
+}
+.avatar-comment-image{
+    height: 35px;
+    width: 35px;
+}
+/* new */
+.profile-background { 
+    height: 35vh;
+    min-height: 110px;
+    max-height: 270px;
+    background-color: #cfd9de;
+    /* background-image: url('x.png'); */
+    object-fit: cover;
+
+} 
+.profile-picture {
+    border: 5px solid white;
+    height: 100px;
+    width: 100px;
+}
+.mt-80 {
+    margin-top: 80px;
+}
+.bio-text-area{
+    height: 100px !important;
+    resize: none;
+}
+
+.profile-border{
+    width: 50%;
+    height: 5px;
+    border-radius: 5px;
+}
+.object-fit{
+    object-fit: cover !important;
+}
+@media (min-width: 576px) {  }
+
+@media (min-width: 768px) {  }
+
+@media (min-width: 992px) {  }
+
+@media (min-width: 1200px) {  }
+
+@media (min-width: 1400px) {  }

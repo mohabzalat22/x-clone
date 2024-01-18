@@ -1,0 +1,8 @@
+@media (max-width: 1200px){
+    .x-icon{
+        min-width: 50px;
+        min-height: 50px;
+        max-width: 80px;
+        max-height: 80px;
+    }
+}
