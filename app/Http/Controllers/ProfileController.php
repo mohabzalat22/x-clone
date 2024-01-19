@@ -8,10 +8,12 @@ use App\Models\User;
 
 class ProfileController extends Controller
 {
-    public function show()
+    public function show($profile)
     {
+        $user =  User::where('id',$profile)->first();
         return view('profile',[
             'auth_user' => auth()->user(),
+            'user' =>$user,
         ]);
     }
 

@@ -14,8 +14,8 @@
                     <div class="border-top border-bottom position-relative">
                         <!-- back-ground -->
                         <div class="profile-background position-relative">
-                            @if ($auth_user->background_picture)
-                                <img src="{{url("storage/profileAssets/images/$auth_user->background_picture")}}" class="w-100 h-100 object-fit">
+                            @if ($user->background_picture)
+                                <img src="{{url("storage/profileAssets/images/$user->background_picture")}}" class="w-100 h-100 object-fit">
                             @endif
                             <input type="file" name="background_picture" id="backgroundimg" class="d-none">
                             <button type="button" class="btn bg-dark rounded-circle p-2  position-absolute top-50 start-50 translate-middle" id="background_img_button">
@@ -26,8 +26,8 @@
                         <div class="position-absolute start-0 w-100 translate-middle-y">
                             <div class="d-flex justify-content-between align-items-end px-3">
                                 <div class="profile-picture rounded-circle bg-light overflow-hidden position-relative">
-                                    @if ($auth_user->profile_picture)
-                                        <img src="{{url("storage/profileAssets/images/$auth_user->profile_picture")}}" class="w-100 h-100 object-fit">
+                                    @if ($user->profile_picture)
+                                        <img src="{{url("storage/profileAssets/images/$user->profile_picture")}}" class="w-100 h-100 object-fit">
                                     @endif
                                     <input type="file" name="profile_picture" id="profileimg" class="d-none">
                                     <button type="button" class="btn bg-dark rounded-circle p-2 position-absolute top-50 start-50 translate-middle" id="profile_img_button">
@@ -40,12 +40,12 @@
                         <div class="mt-80">
                             <!-- name -->
                             <div class="form-floating">
-                                <input type="text" class="form-control" id="profile-name-input" name="name" value = {{$auth_user->name}} placeholder="name">
+                                <input type="text" class="form-control" id="profile-name-input" name="name" value = {{$user->name}} placeholder="name">
                                 <label for="profile-name-input" class="text-primary">name</label>
                             </div>
                             <!-- bio -->
                             <div class="form-floating mt-4">
-                                <textarea type="text" class="form-control bio-text-area" id="profile-name-input" name="bio" placeholder="Bio">{{ $auth_user->bio }}</textarea>
+                                <textarea type="text" class="form-control bio-text-area" id="profile-name-input" name="bio" placeholder="Bio">{{ $user->bio }}</textarea>
                                 <label for="profile-name-input" class="text-primary">Bio</label>
                             </div>
                             <!-- location -->
@@ -77,30 +77,32 @@
     <div class="border-top border-bottom position-relative">
         <!-- back-ground -->
         <div class="profile-background">
-            @if ($auth_user->background_picture)
-                <img src="{{ url("storage/profileAssets/images/$auth_user->background_picture") }}" class="w-100 h-100 object-fit">
+            @if ($user->background_picture)
+                <img src="{{ url("storage/profileAssets/images/$user->background_picture") }}" class="w-100 h-100 object-fit">
             @endif        
         </div>
         <!-- profile img -->
         <div class="position-absolute start-0 w-100 translate-middle-y">
             <div class="d-flex justify-content-between align-items-end px-3">
                 <div class="profile-picture rounded-circle bg-light overflow-hidden">
-                    @if ($auth_user->profile_picture)
-                        <img src="{{ url("storage/profileAssets/images/$auth_user->profile_picture") }}" class="w-100 h-100 object-fit">
+                    @if ($user->profile_picture)
+                        <img src="{{ url("storage/profileAssets/images/$user->profile_picture") }}" class="w-100 h-100 object-fit">
                     @endif
                 </div>
-                <div class="mb-1 p-1">
-                    <button class="btn btn-outline-dark rounded-pill fw-bold" data-bs-toggle="modal" data-bs-target="#profile-modal">
-                        edit profile
-                    </button>
-                </div>
+                @if(auth()->user()->id === $user->id)
+                    <div class="mb-1 p-1">
+                        <button class="btn btn-outline-dark rounded-pill fw-bold" data-bs-toggle="modal" data-bs-target="#profile-modal">
+                            edit profile
+                        </button>
+                    </div>
+                @endif
             </div>
         </div>
          <!-- username -->
          <div class="px-3 mt-80">
             <div class="my-1">
-                <p class="fw-bold h4 m-0">{{$auth_user->name}}</p>
-                <p class="small text-muted mt-1">{{$auth_user->email}}</p>
+                <p class="fw-bold h4 m-0">{{$user->name}}</p>
+                <p class="small text-muted mt-1">{{$user->email}}</p>
             </div>
             <div class="d-flex">
                 <div class="">

@@ -1,4 +1,4 @@
-<div class="d-none d-md-block col-md-2 col-xl-3 ps-0 vh-100 overflow-auto ps-xl-5 pt-3 border position-sticky top-0">
+<div class="d-none d-md-block col-md-2 col-xl-3 ps-0 vh-100 overflow-auto ps-lg-5 ps-xl-3 pt-3 border position-sticky top-0">
     <ul class="list-group list-group-flush border-0 list-group-action">
          <li class="list-group-item pt-0 border-0 sidebar-x">
              <a href="" class="text-decoration-none text-dark d-inline-flex align-items-stretch px-3 py-2 rounded-pill">
@@ -38,7 +38,7 @@
                  <div class="h5 ps-3 d-none d-xl-block mt-1">Lists</div>
              </a>
          </li>
-         <li class="list-group-item pt-0 border-0 sidebar-x">
+         {{-- <li class="list-group-item pt-0 border-0 sidebar-x">
              <a href="" class="text-decoration-none text-dark d-inline-flex align-items-stretch px-3 py-2 rounded-pill">
                  <svg viewBox="0 0 24 24" height="25px" width="25px" aria-hidden="true" class="d-block"><g><path d="M7.501 19.917L7.471 21H.472l.029-1.027c.184-6.618 3.736-8.977 7-8.977.963 0 1.95.212 2.87.672-.444.478-.851 1.03-1.212 1.656-.507-.204-1.054-.329-1.658-.329-2.767 0-4.57 2.223-4.938 6.004H7.56c-.023.302-.05.599-.059.917zm15.998.056L23.528 21H9.472l.029-1.027c.184-6.618 3.736-8.977 7-8.977s6.816 2.358 7 8.977zM21.437 19c-.367-3.781-2.17-6.004-4.938-6.004s-4.57 2.223-4.938 6.004h9.875zm-4.938-9c-.799 0-1.527-.279-2.116-.73-.836-.64-1.384-1.638-1.384-2.77 0-1.93 1.567-3.5 3.5-3.5s3.5 1.57 3.5 3.5c0 1.132-.548 2.13-1.384 2.77-.589.451-1.317.73-2.116.73zm-1.5-3.5c0 .827.673 1.5 1.5 1.5s1.5-.673 1.5-1.5-.673-1.5-1.5-1.5-1.5.673-1.5 1.5zM7.5 3C9.433 3 11 4.57 11 6.5S9.433 10 7.5 10 4 8.43 4 6.5 5.567 3 7.5 3zm0 2C6.673 5 6 5.673 6 6.5S6.673 8 7.5 8 9 7.327 9 6.5 8.327 5 7.5 5z"></path></g></svg>
                  <div class="h5 ps-3 d-none d-xl-block mt-1">Communities</div>
@@ -49,7 +49,7 @@
                  <svg viewBox="0 0 24 24" height="25px" width="25px" aria-hidden="true" class="d-block"><g><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path></g></svg>
                  <div class="h5 ps-3 d-none d-xl-block mt-1">Premium</div>
              </a>
-         </li>
+         </li> --}}
          <li class="list-group-item pt-0 border-0 sidebar-x">
              <a href="{{route('profile.show',['profile'=>auth()->user()->id])}}" class="text-decoration-none text-dark d-inline-flex align-items-stretch px-3 py-2 rounded-pill">
                  <svg viewBox="0 0 24 24" height="25px" width="25px" aria-hidden="true" class="d-block"><g><path d="M5.651 19h12.698c-.337-1.8-1.023-3.21-1.945-4.19C15.318 13.65 13.838 13 12 13s-3.317.65-4.404 1.81c-.922.98-1.608 2.39-1.945 4.19zm.486-5.56C7.627 11.85 9.648 11 12 11s4.373.85 5.863 2.44c1.477 1.58 2.366 3.8 2.632 6.46l.11 1.1H3.395l.11-1.1c.266-2.66 1.155-4.88 2.632-6.46zM12 4c-1.105 0-2 .9-2 2s.895 2 2 2 2-.9 2-2-.895-2-2-2zM8 6c0-2.21 1.791-4 4-4s4 1.79 4 4-1.791 4-4 4-4-1.79-4-4z"></path></g></svg>
@@ -70,20 +70,20 @@
     </ul>
    
     <button class="btn btn-primary px-2 py-3 w-100 rounded-pill d-none d-xl-block"><span class="h5">Post</span></button>
-    <div class="d-flex mt-2 ms-2 sidebar-x p-2 rounded-pill mb-3 button-x">
-     <div class="align-self-center bg-light rounded-circle overflow-hidden">
+    <div class="d-flex mt-2 ms-2 sidebar-x p-2 rounded-pill mb-3 button-x justify-content-between align-items-center">
+     <div class="bg-light rounded-circle overflow-hidden">
         @if ($auth_user->profile_picture)
-            <img src="{{ url( "storage/profileAssets/images/" . $auth_user->profile_picture ) }}" alt="" style="width: 50px; height: 50px;" class="rounded-circle object-fit">
+            <img src="{{ url( "storage/profileAssets/images/" . $auth_user->profile_picture ) }}" alt="" style="width: 50px; height: 50px;" class="rounded-circle d-block object-fit">
             @else 
                 <div style="width: 50px; height: 50px;" class="rounded-circle d-block bg-dark"></div>
         @endif
      </div>
-     <div class="flex-grow-1 ms-3 d-none d-xl-block">
+     <div class="ms-2 d-none d-xl-block">
          <div class="h6 m-0 bold">{{ $auth_user->name }}</div>
          <small class="text-muted">{{ $auth_user->email }}</small>
      </div>
      <div class="dropdown dropup">
-         <button class="btn border-0 align-self-center me-2 d-none d-xl-block button-x" data-bs-toggle="dropdown">
+         <button class="btn border-0 me-2 d-none d-xl-block button-x" data-bs-toggle="dropdown">
              <svg viewBox="0 0 24 24" width="20px" height="20px" aria-hidden="true" class=""><g><path d="M3 12c0-1.1.9-2 2-2s2 .9 2 2-.9 2-2 2-2-.9-2-2zm9 2c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm7 0c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2z"></path></g></svg>                
          </button>  
          <ul class="dropdown-menu content-box px-4">

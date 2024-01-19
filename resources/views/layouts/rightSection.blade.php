@@ -1,16 +1,25 @@
 <div class="d-none d-xl-block col-xl-3 px-4 pt-2 vh-100 overflow-auto position-sticky top-0 right-section">
-    <div class="search bg-white pt-1 position-sticky top-0 z-index-1090">
-        <form action="" class="mb-3">
-            <div class="input-group border rounded-pill w-100 px-2 py-1 bg-light" id="search">
+    <div class="search bg-white position-sticky top-0 z-index-1090">
+        <form action="" class="position-relative">
+            <div class="input-group border rounded-pill w-100 px-2 py-1 bg-light">
                 <div class="input-group-text border-0">
                     <svg viewBox="0 0 24 24" height="20px" width="20px" aria-hidden="true" class="d-inline" fill="var(--bs-secondary)"><g><path d="M10.25 3.75c-3.59 0-6.5 2.91-6.5 6.5s2.91 6.5 6.5 6.5c1.795 0 3.419-.726 4.596-1.904 1.178-1.177 1.904-2.801 1.904-4.596 0-3.59-2.91-6.5-6.5-6.5zm-8.5 6.5c0-4.694 3.806-8.5 8.5-8.5s8.5 3.806 8.5 8.5c0 1.986-.682 3.815-1.824 5.262l4.781 4.781-1.414 1.414-4.781-4.781c-1.447 1.142-3.276 1.824-5.262 1.824-4.694 0-8.5-3.806-8.5-8.5z"></path></g></svg>
                 </div>
-                <input type="text" class="form-control border-0 bg-transparent focus-none" placeholder="Search">
+                <input type="text" class="form-control border-0 bg-transparent focus-none" placeholder="Search" id="user-search">
             </div>
         </form>
+        <div class="position-absolute top-100 bg-white rounded-4 w-100 mt-1 shadow-lg p-2" id="user-search-menu">
+            {{-- <div class="d-flex px-4 py-1 light-hover rounded-3">
+                <div style="width: 40px; height: 40px;" class="rounded-circle d-block bg-dark"></div>
+                <div class="ps-2 d-flex flex-column justify-content-center">           
+                    <p class="fw-bold m-0">mohab</p>
+                    <p class="small text-muted m-0">@mohab</p>
+                </div>
+            </div> --}}
+        </div>
     </div>
     <!-- card -->
-    <div class="card rounded-4 bg-light p-1 border-light mb-4">
+    <div class="card rounded-4 bg-light p-1 border-light mt-4">
         <div class="card-header border-0  bg-transparent">
             <div class="card-title h5 fw-bold">
                 Subscribe to Premium
@@ -28,7 +37,7 @@
         </div>
     </div>
     <!-- what's happening in egypt -->
-    <div class="card rounded-4 bg-light p-1 border-light mb-4">
+    <div class="card rounded-4 bg-light p-1 border-light mt-4">
         <!-- header -->
         <div class="card-header border-0 bg-transparent">
             <div class="card-title fw-bolder h5">What’s happening</div>
@@ -108,7 +117,7 @@
         </div>
     </div>
     <!-- card who to follow -->
-    <div class="card rounded-4 bg-light p-1 border-light">
+    <div class="card rounded-4 bg-light p-1 border-light mt-4">
         <div class="card-header bg-transparent border-0">
             <div class="card-title m-0 p-0">
                 <div class="h5 text-dark fw-bolder">Who to follow</div>
