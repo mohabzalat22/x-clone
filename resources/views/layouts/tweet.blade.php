@@ -233,7 +233,7 @@
                         </li>
                     </ul>
                 </div>
-                <form action="reaction/heart" method="post">
+                <form action="{{route('reaction.heart')}}" method="post">
                     @csrf
                     <input type="text" value="{{$tweet->id}}" name="tweet_id" hidden>
                     <button type="submit" class="btn border-0 react-button react-button-3" id="heart-button" tweetId="{{$tweet->id}}">
@@ -241,7 +241,7 @@
                         <span class="text-secondary small">{{ App\Services\ReactionsService::CountHeartsByTweetId($tweet->id) }}</span>
                     </button>
                 </form>
-                <form action="reaction/viewed" method="post">
+                <form action="{{route('reaction.viewed')}}" method="post">
                     @csrf
                     <input type="text" value="{{$tweet->id}}" name="tweet_id" hidden >
                     <button class="btn border-0 react-button react-button-4">

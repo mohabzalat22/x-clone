@@ -19,7 +19,7 @@ profileImgButton?.addEventListener('click', (e)=>{
 
 // user-search
 let userSearch = document.getElementById("user-search");
-userSearch.addEventListener('input',(e)=>{
+userSearch?.addEventListener('input',(e)=>{
     let menu = document.getElementById("user-search-menu");
     menu.innerHTML='';
     if(userSearch.value == ''){

@@ -89,28 +89,47 @@
                         <img src="{{ url("storage/profileAssets/images/$user->profile_picture") }}" class="w-100 h-100 object-fit">
                     @endif
                 </div>
-                @if(auth()->user()->id === $user->id)
+                @if(Gate::allows('editProfile', $user))
                     <div class="mb-1 p-1">
                         <button class="btn btn-outline-dark rounded-pill fw-bold" data-bs-toggle="modal" data-bs-target="#profile-modal">
                             edit profile
                         </button>
+                    </div>
+                @else
+                    <div class="d-flex">
+                        <button class="btn btn-light rounded-circle p-2 border"><svg viewBox="0 0 25 25" style="width: 22px;height:22px" aria-hidden="true" class="" style="color: rgb(15, 20, 25);"><g><path d="M1.998 5.5c0-1.381 1.119-2.5 2.5-2.5h15c1.381 0 2.5 1.119 2.5 2.5v13c0 1.381-1.119 2.5-2.5 2.5h-15c-1.381 0-2.5-1.119-2.5-2.5v-13zm2.5-.5c-.276 0-.5.224-.5.5v2.764l8 3.638 8-3.636V5.5c0-.276-.224-.5-.5-.5h-15zm15.5 5.463l-8 3.636-8-3.638V18.5c0 .276.224.5.5.5h15c.276 0 .5-.224.5-.5v-8.037z"></path></g></svg></button>
+                        <form action="{{route('follow')}}" method="POST">
+                            @csrf
+                            <input name="profile" type="text" value="{{$profile}}" hidden>
+                            @if (\App\Services\FriendService::isFriend(auth()->user()->id, $profile))
+                                <button type="button" class="ms-1 btn btn-outline-dark rounded-pill fw-bold">Following</button>
+                            @else
+                                <button type="submit" class="ms-1 btn btn-dark rounded-pill fw-bold">Follow</button>
+                            @endif
+                        </form>
                     </div>
                 @endif
             </div>
         </div>
          <!-- username -->
          <div class="px-3 mt-80">
-            <div class="my-1">
+            <div class="mt-1">
                 <p class="fw-bold h4 m-0">{{$user->name}}</p>
-                <p class="small text-muted mt-1">{{$user->email}}</p>
+                <p class="small text-muted m-0">{{$user->email}}</p>
+            </div>
+            <!-- bio -->
+            <div class="text-dark my-2">
+                <p class="ms-2">
+                    {{$user->bio}}
+                </p>
             </div>
             <div class="d-flex">
                 <div class="">
-                    <span class="fw-bold">5</span>
+                    <span class="fw-bold fw-bold">{{ App\Services\FriendService::friendsCount($profile)[1] }}</span>
                     <span class="text-muted small">Following</span>
                 </div>
                 <div class="ms-2">
-                    <span class="fw-bold">5</span>
+                    <span class="fw-bold fw-bold">{{ App\Services\FriendService::friendsCount($profile)[0] }}</span>
                     <span class="text-muted small">Followers</span>
                 </div>
             </div>
@@ -138,5 +157,9 @@
                 {{-- <div class="profile-border bg-primary mx-auto mt-1"></div> --}}
             </div>
         </div>
+         <!-- post -->
+        @foreach ($tweets as $tweet)
+            @include('layouts.tweet')
+        @endforeach
     </div>
 </div>

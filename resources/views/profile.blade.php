@@ -17,6 +17,8 @@
     };
     </script>
     @vite('resources/css/home.css')
+    {{-- <link rel="stylesheet" href="build/assets/app-Y8EbMdDv.css">
+    <link rel="stylesheet" href="build/assets/app-Syctgfzh.css"> --}}
 </head>
 <body class="bg-white">
     {{-- loader --}}
@@ -36,5 +38,6 @@
     </div>
     @vite('resources/js/app.js')
     @vite('resources/js/home.js')
+    {{-- <script src="build/assets/app-NjozvkkZ.js"></script> --}}
 </body>
 </html>

@@ -13,6 +13,14 @@ class ReactionController extends Controller
             'tweet_id' => ['required']
         ]);
 
+        $record = Reaction::where('user_id', auth()->user()->id)->where('tweet_id', $request->tweet_id);
+        if($record->exists()){
+            $record->update([
+                'heart' => ! $record->first()->heart,
+            ]);
+            return back();
+        }
+
         Reaction::create([
             'user_id' => auth()->user()->id,
             'tweet_id' => $request->tweet_id,
@@ -28,6 +36,14 @@ class ReactionController extends Controller
             'tweet_id' => ['required']
         ]);
 
+        $record = Reaction::where('user_id', auth()->user()->id)->where('tweet_id', $request->tweet_id);
+        if($record->exists()){
+            $record->update([
+                'viewed' => ! $record->first()->viewed,
+            ]);
+            return back();
+        }
+        
         Reaction::create([
             'user_id' => auth()->user()->id,
             'tweet_id' => $request->tweet_id,

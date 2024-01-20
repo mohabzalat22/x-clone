@@ -16,6 +16,8 @@
     };
     </script>
     @vite('resources/css/login.css')
+    {{-- <link rel="stylesheet" href="build/assets/app-Y8EbMdDv.css">
+    <link rel="stylesheet" href="build/assets/app-Syctgfzh.css"> --}}
 </head>
 <body>
     {{-- loader --}}
@@ -234,5 +236,6 @@
         </ul>
     </footer>
     @vite(['resources/js/app.js','resources/js/login.js']);
+    {{-- <script src="build/assets/app-NjozvkkZ.js"></script> --}}
 </body>
 </html>

@@ -8,7 +8,7 @@
                 <input type="text" class="form-control border-0 bg-transparent focus-none" placeholder="Search" id="user-search">
             </div>
         </form>
-        <div class="position-absolute top-100 bg-white rounded-4 w-100 mt-1 shadow-lg p-2" id="user-search-menu">
+        <div class="position-absolute top-100 bg-white rounded-4 w-100 mt-1 shadow-lg p-2 d-none" id="user-search-menu">
             {{-- <div class="d-flex px-4 py-1 light-hover rounded-3">
                 <div style="width: 40px; height: 40px;" class="rounded-circle d-block bg-dark"></div>
                 <div class="ps-2 d-flex flex-column justify-content-center">           

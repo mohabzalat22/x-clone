@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Tweet;
 use Illuminate\Http\Request;
 
 use App\Models\User;
@@ -11,9 +12,12 @@ class ProfileController extends Controller
     public function show($profile)
     {
         $user =  User::where('id',$profile)->first();
+        $tweets = Tweet::where('user_id',$profile)->get();
         return view('profile',[
             'auth_user' => auth()->user(),
             'user' =>$user,
+            'profile' => $profile,
+            'tweets' => $tweets,
         ]);
     }
 
@@ -55,6 +59,9 @@ class ProfileController extends Controller
                 ]);
         } 
 
+        if($request->bio){
+            User::where('id', $request->profile )->update(['bio' => $request->bio]);
+        }
         return back();
     }
 }

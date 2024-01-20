@@ -1,3 +1,4 @@
 import './bootstrap';
 import '../sass/app.scss';
-// import './login';
+import './home';
+import './login';

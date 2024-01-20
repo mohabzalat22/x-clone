@@ -6,15 +6,16 @@ use App\Http\Controllers\TweetController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\ReactionController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\FollowController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Request;
 
 
 // PUBLIC ROUTES
-Route::get('/', [AuthController::class, 'index']); // login data request
 
 /// GUEST 
 Route::middleware('guest')->group(function(){
+    Route::get('/', [AuthController::class, 'index']); // login data request
     Route::post('/login', [AuthController::class, 'login'])->name('login'); // login => view
     Route::post('/register', [AuthController::class, 'register'])->name('register');
 });
@@ -31,11 +32,13 @@ Route::middleware('auth')->group(function(){
     Route::resource('comment', CommentController::class)->except(['index','create']);
     // REACTION CONTROLLER
     Route::prefix('reaction')->group(function (){
-        Route::post('heart', [ReactionController::class, 'heart']);
-        Route::post('viewed', [ReactionController::class, 'viewed']);
+        Route::post('heart', [ReactionController::class, 'heart'])->name('reaction.heart');
+        Route::post('viewed', [ReactionController::class, 'viewed'])->name('reaction.viewed');
     });
     // PROFILE
     Route::get('profile/{profile}',[ProfileController::class, 'show'])->name('profile.show');
     Route::put('profile/{profile}',[ProfileController::class, 'update'])->name('profile.update');
+    // FOLLOW
+    Route::post('follow',[FollowController::class, 'follow'])->name('follow');
 
 });
