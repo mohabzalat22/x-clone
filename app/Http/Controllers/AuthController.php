@@ -3,8 +3,9 @@
 namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-
 use App\Models\User;
+use App\Mail\Welcome;
+use Illuminate\Support\Facades\Mail;
 
 class AuthController extends Controller
 {
@@ -38,7 +39,7 @@ class AuthController extends Controller
             'email' => $request->email,
             'password' => Hash::make($request->password)
         ]);
-
+        Mail::to($user->email)->send(new Welcome($user));
         auth()->login($user);
         return redirect()->route('home');
     }

@@ -41,4 +41,9 @@ Route::middleware('auth')->group(function(){
     // FOLLOW
     Route::post('follow',[FollowController::class, 'follow'])->name('follow');
 
+    //TEST
+    Route::get('/test',function(){
+        return view('mails.welcome',['user'=>auth()->user()]);
+    });
+
 });
