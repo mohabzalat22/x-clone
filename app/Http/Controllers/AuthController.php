@@ -39,7 +39,7 @@ class AuthController extends Controller
             'email' => $request->email,
             'password' => Hash::make($request->password)
         ]);
-        Mail::to($user->email)->send(new Welcome($user));
+        // Mail::to($user->email)->send(new Welcome($user));
         auth()->login($user);
         return redirect()->route('home');
     }

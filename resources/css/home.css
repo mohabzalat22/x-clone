@@ -12,6 +12,9 @@
     height: 4px;
     background-color: var(--main-color);
     border-radius: 6px;
+} 
+.max-w-60{
+    max-width: 60px !important;
 }
 .button-x:hover{
     background-color: aliceblue !important;

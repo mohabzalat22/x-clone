@@ -7,6 +7,7 @@ use App\Http\Controllers\CommentController;
 use App\Http\Controllers\ReactionController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\FollowController;
+use App\Http\Controllers\NotificationsController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Request;
 
@@ -40,10 +41,7 @@ Route::middleware('auth')->group(function(){
     Route::put('profile/{profile}',[ProfileController::class, 'update'])->name('profile.update');
     // FOLLOW
     Route::post('follow',[FollowController::class, 'follow'])->name('follow');
-
-    //TEST
-    Route::get('/test',function(){
-        return view('mails.welcome',['user'=>auth()->user()]);
-    });
+    // NOTIFICATIONS
+    Route::get('notifications',[NotificationsController::class, 'show'])->name('notifications');
 
 });

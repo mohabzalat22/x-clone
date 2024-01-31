@@ -11,13 +11,14 @@ class ProfileController extends Controller
 {
     public function show($profile)
     {
-        $user =  User::where('id',$profile)->first();
+        $user =  User::find($profile);
         $tweets = Tweet::where('user_id',$profile)->get();
         return view('profile',[
             'auth_user' => auth()->user(),
             'user' =>$user,
             'profile' => $profile,
             'tweets' => $tweets,
+            'notifications' => User::find(auth()->user()->id)->unreadNotifications,
         ]);
     }
 
