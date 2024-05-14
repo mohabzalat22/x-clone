@@ -1,19 +1,16 @@
 <script setup>
 import { onMounted, reactive, watch} from 'vue';
 import carcardView from './carcardView.vue';  
-import { useFetch } from '@/combosables/fetch';
-const {loading, data, error, fetchData} = useFetch();
-// FILTER DATA
+import axios from 'axios';
+axios.defaults.withCredentials = true;
+axios.defaults.baseURL = 'http://localhost:8000';
+axios.defaults.withXSRFToken = true;
 
 let FILTERDATA = [];
-
-// 
-
 onMounted(()=>{
-    fetchData('http://localhost:8000/api',{
-        method: 'POST',
-        body: JSON.stringify(FILTERDATA),
-    });
+    axios.post('/api/v1',{
+        data: FILTERDATA
+    })
 });
 
 const pick = reactive({
@@ -35,7 +32,7 @@ watch(
     ()=>drop.date = pick.date
 );
 
-watch([pick, drop], ()=>{
+watch([()=>pick.selected, ()=>drop.selected], ()=>{
     FILTERDATA = []; // clean old
     if(pick.selected == true && drop.selected == false)
     {   
@@ -50,11 +47,9 @@ watch([pick, drop], ()=>{
         FILTERDATA.push({'pick': pick});
         FILTERDATA.push({'drop': drop});
     }
-    fetchData('http://localhost:8000/api',{
-        method: 'POST',
-        body: JSON.stringify(FILTERDATA),
-    });
-    console.log(FILTERDATA);
+    axios.post('/api/v1',{
+        data: FILTERDATA
+    })
 });
 
 const getCurrentDate = ()=> {
@@ -297,14 +292,14 @@ const dropTime = ()=> {
                 <h4 class="text-base text-gray-600">Popular Cars</h4>
                 <a class="text-blue-700 font-bold text-base">View All</a>
             </div>
-            <div :v-if="data.length" class="grid justify-items-center md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 mt-8">
-                <carcardView v-for="item in data" v-bind="item" :to="`/detail/${item.id}?name=${item.name}&type=${item.model}&capacity=${item.capacity}`"/>
-            </div>
+            <!-- <div :v-if="data.length" class="grid justify-items-center md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 mt-8"> -->
+                <!-- <carcardView v-for="item in data" v-bind="item" :to="`/detail/${item.id}?name=${item.name}&type=${item.model}&capacity=${item.capacity}`"/> -->
+            <!-- </div> -->
             <div class="flex justify-between items-center py-8">
                 <div class="flex-grow flex justify-center">
-                    <button class="bg-blue-600 text-xl ms-16 text-white px-8 py-2 rounded-md capitalize hover:bg-blue-700 hover:shadow-lg hover:shadow-blue-200">show more</button>
+                    <button class="bg-blue-600 text-xl ms-16 text-white px-8 py-2 rounded-md capi/v1talize hover:bg-blue-700 hover:shadow-lg hover:shadow-blue-200">show more</button>
                 </div>
-                <h5 class="font-bold text-gray-400 m-0">{{ data.length }} cars</h5>
+                <!-- <h5 class="font-bold text-gray-400 m-0">{{ data.length }} cars</h5> -->
             </div>
             <!-- show more cars -->
         </div>
