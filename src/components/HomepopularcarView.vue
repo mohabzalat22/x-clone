@@ -1,16 +1,26 @@
 <script setup>
-import { onMounted, reactive, watch} from 'vue';
+import { onMounted, reactive, ref, watch} from 'vue';
 import carcardView from './carcardView.vue';  
 import axios from 'axios';
-axios.defaults.withCredentials = true;
 axios.defaults.baseURL = 'http://localhost:8000';
 axios.defaults.withXSRFToken = true;
+axios.defaults.withCredentials = true;
+
 
 let FILTERDATA = [];
-onMounted(()=>{
-    axios.post('/api/v1',{
+const FILTER_ACTIVATED = ref(false);
+
+const data = ref([]);
+
+const filter_fetch_data = async ()=>{
+    const res = await axios.post('/api/v1',{
         data: FILTERDATA
-    })
+    });
+    data.value = await res.data;
+}
+
+onMounted(()=>{
+    filter_fetch_data();
 });
 
 const pick = reactive({
@@ -32,8 +42,9 @@ watch(
     ()=>drop.date = pick.date
 );
 
-watch([()=>pick.selected, ()=>drop.selected], ()=>{
+watch([pick, drop], ()=>{
     FILTERDATA = []; // clean old
+    FILTER_ACTIVATED.value = true;
     if(pick.selected == true && drop.selected == false)
     {   
         FILTERDATA.push({'pick': pick});
@@ -47,9 +58,7 @@ watch([()=>pick.selected, ()=>drop.selected], ()=>{
         FILTERDATA.push({'pick': pick});
         FILTERDATA.push({'drop': drop});
     }
-    axios.post('/api/v1',{
-        data: FILTERDATA
-    })
+    filter_fetch_data();
 });
 
 const getCurrentDate = ()=> {
@@ -292,9 +301,9 @@ const dropTime = ()=> {
                 <h4 class="text-base text-gray-600">Popular Cars</h4>
                 <a class="text-blue-700 font-bold text-base">View All</a>
             </div>
-            <!-- <div :v-if="data.length" class="grid justify-items-center md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 mt-8"> -->
-                <!-- <carcardView v-for="item in data" v-bind="item" :to="`/detail/${item.id}?name=${item.name}&type=${item.model}&capacity=${item.capacity}`"/> -->
-            <!-- </div> -->
+            <div :v-if="data.length" class="grid justify-items-center md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 mt-8">
+                <carcardView v-for="item in data" v-bind="item" :to="`/detail/${item.id}?name=${item.name}&type=${item.model}&capacity=${item.capacity}`"/>
+            </div>
             <div class="flex justify-between items-center py-8">
                 <div class="flex-grow flex justify-center">
                     <button class="bg-blue-600 text-xl ms-16 text-white px-8 py-2 rounded-md capi/v1talize hover:bg-blue-700 hover:shadow-lg hover:shadow-blue-200">show more</button>
