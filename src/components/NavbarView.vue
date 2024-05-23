@@ -1,13 +1,17 @@
 <script setup> 
-import {ref, watch} from 'vue';
+import {onMounted, ref, watch} from 'vue';
 import { useFetch } from '@/combosables/fetch';
+import axios from 'axios';
 
 const search = ref(null);
+const data = ref([]);
 
-const {loading, data, error, fetchData} = useFetch();
-
+const getData = async(search)=>{
+    const res = await axios.get(`/api/v1/category?name=${search}`)
+    data.value = await res.data;
+}
 watch(search, ()=>{
-    fetchData(`http://localhost:8000/api/category?name=${search.value}`);
+    getData(search.value);
 });
 
 //name search
@@ -30,7 +34,7 @@ watch(search, ()=>{
                             </div>
                             <input v-model="search" type="search" class="ps-12 block md:w-96 h-8 rounded-full outline-0 border text-sm" placeholder="Search something here">
                         </div>
-                        <div v-if="data.length"  class="absolute w-full text-lg border text-gray-700 bg-gray-100 p-4 rounded-md m-1">
+                        <div v-if="data.length"  class="hidden lg:block absolute w-full text-lg border text-gray-700 bg-gray-100 p-4 rounded-md m-1">
                             <ul>
                                 <li v-for="item in data">
                                     <RouterLink @click="search=''" :to="`/category?name=${item.name}&type=${item.model}&capacity=${item.capacity}`" class="hover:bg-gray-200 block p-2 m-1">
@@ -74,7 +78,16 @@ watch(search, ()=>{
                             <path d="M22 22L20 20" stroke="#596780" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                         </svg>
                     </div>
-                    <input type="search" class="ps-12 block w-full h-8 rounded-full outline-0 border text-sm" placeholder="Search something here">
+                    <input v-model="search" type="search" class="ps-12 block w-full h-8 rounded-full outline-0 border text-sm" placeholder="Search something here">
+                    <div v-if="data.length"  class="lg:hidden absolute w-full text-lg border text-gray-700 bg-gray-100 p-4 rounded-md m-1">
+                        <ul>
+                            <li v-for="item in data">
+                                <RouterLink @click="search=''" :to="`/category?name=${item.name}&type=${item.model}&capacity=${item.capacity}`" class="hover:bg-gray-200 block p-2 m-1">
+                                    {{item.name}}
+                                </RouterLink>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>
