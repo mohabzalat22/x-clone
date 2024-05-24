@@ -1,6 +1,7 @@
 <script setup>
 import { onMounted, reactive, ref, watch} from 'vue';
 import carcardView from './carcardView.vue';  
+// setup for axios during post req
 import axios from 'axios';
 axios.defaults.baseURL = 'http://localhost:8000';
 axios.defaults.withXSRFToken = true;
@@ -8,7 +9,6 @@ axios.defaults.withCredentials = true;
 
 
 let FILTERDATA = [];
-const FILTER_ACTIVATED = ref(false);
 
 const data = ref([]);
 
@@ -44,7 +44,6 @@ watch(
 
 watch([pick, drop], ()=>{
     FILTERDATA = []; // clean old
-    FILTER_ACTIVATED.value = true;
     if(pick.selected == true && drop.selected == false)
     {   
         FILTERDATA.push({'pick': pick});
@@ -308,7 +307,7 @@ const dropTime = ()=> {
                 <div class="flex-grow flex justify-center">
                     <button class="bg-blue-600 text-xl ms-16 text-white px-8 py-2 rounded-md capi/v1talize hover:bg-blue-700 hover:shadow-lg hover:shadow-blue-200">show more</button>
                 </div>
-                <!-- <h5 class="font-bold text-gray-400 m-0">{{ data.length }} cars</h5> -->
+                <h5 class="font-bold text-gray-400 m-0">{{ data.length }} cars</h5>
             </div>
             <!-- show more cars -->
         </div>
