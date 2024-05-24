@@ -8,12 +8,14 @@ import { Navigation, Pagination } from 'swiper/modules';
 import 'swiper/swiper-bundle.css';
 // import 'swiper/css/navigation';
 import 'swiper/css/pagination';
-
+import axios from 'axios';
+axios.defaults.baseURL = 'http://localhost:8000';
+axios.defaults.withXSRFToken = true;
+axios.defaults.withCredentials = true;
 const route = useRoute();
 
 // side
 
-const {loading:loading, data:data, error:error, fetchData} = useFetch();
 
 const type = reactive({
     'sport': false,
@@ -31,6 +33,10 @@ const capacity = reactive({
     'x8': false,
 });
 
+const data = ref([]);
+const dataDetail = ref([]);
+const dataFilter = ref([]);
+
 const priceFilter = ref(50);
 
 const init_type = route.query.type;
@@ -38,19 +44,18 @@ const init_capacity = route.query.capacity;
 type[init_type] = true;
 capacity[`x${init_capacity}`] = true;
 
-const {loading:loadingDetail, data:dataDetail, error:errorDetail, fetchData:fetchDetail} = useFetch(); //detail
 
-onMounted(()=>{
-    // side
-    fetchData('http://localhost:8000/api/category/data');
-    //detail
-    const id = route.params.id;
-    fetchDetail(`http://localhost:8000/api/detail/${id}`);
-});
+const getSideData = async ()=>{
+    const res = await axios.get('/api/v1/category/data');
+    data.value = await res.data;
+};
 
-const {loading:loadingFilter, data:dataFilter, error:errorFilter, fetchData:fetchFilter} = useFetch();
+const getDetailData = async (id)=>{
+    const res = await axios.get(`/api/v1/detail/${id}`);
+    dataDetail.value = await res.data;
+}
 
-watch([type, capacity, priceFilter], ()=>{
+const filter = async () =>{
     const filteredType = [];
     const filteredCapacity = [];
     for(const [key, value] of Object.entries(type)){
@@ -64,41 +69,47 @@ watch([type, capacity, priceFilter], ()=>{
             filteredCapacity.push(key.replace('x',''))
         }
     }
-    fetchFilter(`http://localhost:8000/api/detail/filter`,{
-        method: 'POST',
-        headers: {
-            'Accept': 'application/json, text/plain, */*',
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
+    const res = await axios.post(
+        '/api/v1/detail/filter',
+        {
             'type': filteredType, 
             'capacity': filteredCapacity,
             'price': priceFilter.value
-        }
-        ),
-    }).then(()=>{
-        const swiper = new Swiper('.swiper', {
-            slidesPerView: 1,
-            modules: [Pagination],
-            pagination: {
-                el: '.swiper-pagination',
-                clickable: true,
-            },
-            breakpoints:{
-                768 :{
-                    slidesPerView: 3,
-                },
-            }
-        });
-    });
+        },
+    );
+    
+    dataFilter.value = await res.data;
+}
+onMounted(()=>{
+    // side
+    getSideData();
+    //detail
+    const id = route.params.id;
+    getDetailData(id);
+});
+
+watch([type, capacity, priceFilter], ()=>{
+    filter();
+    // .then(()=>{
+    //     const swiper = new Swiper('.swiper', {
+    //         slidesPerView: 1,
+    //         modules: [Pagination],
+    //         pagination: {
+    //             el: '.swiper-pagination',
+    //             clickable: true,
+    //         },
+    //         breakpoints:{
+    //             768 :{
+    //                 slidesPerView: 3,
+    //             },
+    //         }
+    //     });
+    // });
     // filter
 },
 { immediate: true });
 
 // side
-
-
-
 
 
 const descriptionClick = ref(false);
@@ -108,7 +119,7 @@ const descriptionClick = ref(false);
   <div class="bg-white">
       <div class="xl:container mx-auto relative">
         <!-- modal -->
-        <div class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-1/2 max-h-1/2 z-50">
+        <!-- <div class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-1/2 max-h-1/2 z-50">
             <div class="bg-gray-100 p-8 rounded-lg border shadow">
                 <div class="flex my-6">
                     <div class="flex-shrink-0">
@@ -123,8 +134,7 @@ const descriptionClick = ref(false);
                         </div>
                     </div>
                 </div>
-                <textarea class="block w-full p-2 rounded-md focus:outline-1 focus:border-gray-100 border focus:outline-gray-200 text-gray-800" placeholder="Review here!">
-                </textarea>
+                <textarea rows="5" class="block w-full p-2 rounded-md focus:outline-1 focus:border-gray-100 border focus:outline-gray-200 text-gray-800" placeholder="Review here!"></textarea>
                 <div class="flex justify-between items-end">
                     <div>
                         <h5 class="mt-4 text-lg text-gray-800 font-bold">RATE</h5>
@@ -161,8 +171,9 @@ const descriptionClick = ref(false);
                     </div>
                 </div>
             </div>
-        </div>
+        </div> -->
         <div class="">
+            <!-- side -->
             <div class="xl:grid grid-cols-12">
                 <div class="hidden xl:block col-start-1 col-span-3 bg-white py-6 px-10">
                     <h3 class="text-sm text-gray-400">TYPE</h3>
@@ -247,9 +258,9 @@ const descriptionClick = ref(false);
                         <h3 class="text-xl font-semibold text-gray-600">Max <span class="ms-2">${{ priceFilter }}</span></h3>
                     </div>
                 </div>
+                <!-- left - side -->
                 <div class="col-start-4 col-span-9 bg-gray-100">
                     <div class="xl:grid grid-cols-2 px-4 py-4 md:px-auto md:py-8">
-                        <!-- left - side -->
                         <div class="flex justify-center">
                             <div class="flex flex-col">
                                 <div class="w-full xl:w-[450px] xl:h-[360] bg-blue-500 rounded-lg">
