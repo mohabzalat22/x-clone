@@ -5,6 +5,8 @@ import DetailPage from '../pages/DetailPage.vue';
 import PaymentPage from '../pages/PaymentPage.vue';
 import LoginPage from '../pages/LoginPage.vue';
 import RegisterPage from '../pages/RegisterPage.vue';
+import ProfilePage from '../pages/ProfilePage.vue';
+
 
 
 
@@ -15,6 +17,8 @@ import PaymentMethodView from '@/components/payment/PaymentMethodView.vue';
 import ConfirmationView from '@/components/payment/ConfirmationView.vue';
 import NavbarView from '@/components/NavbarView.vue';
 import FooterView from '@/components/FooterView.vue';
+import { ref } from 'vue';
+import axios from 'axios';
 
 const routes = [
     {
@@ -26,6 +30,11 @@ const routes = [
         path: '/register',
         name: RegisterPage,
         component: RegisterPage,
+    },
+    {
+        path: '/profile',
+        name: ProfilePage,
+        component: ProfilePage,
     },
     {
         path: '/',
@@ -84,9 +93,38 @@ const routes = [
         ]
     },
 ];
+const Auth = async (to, next)=>{
+    const res = await axios.get('http://localhost:8000/api/user', {  
+            validateStatus: function (status) {
+            // Allow all status codes
+                if(status == 200 || status == 401){
+                    return true;
+                }
+            }
+        }
+    );
+    if(res.status == 200){
+        localStorage.setItem('auth',true);
+    }
+    else if(res.status == 401){
+        localStorage.setItem('auth',false);
+    }
 
+    console.log({'auth': localStorage.getItem('auth'), 'status': res.status});
+
+    if (to.path !== '/login' && !localStorage.getItem('auth')) next('/login')
+    else next()
+
+}
 const router = createRouter({
     history: createWebHistory (),
     routes
   });
+
+//   Navigation guards
+
+router.beforeEach((to, from, next) => {
+    Auth(to, next);
+});
+
 export default router
