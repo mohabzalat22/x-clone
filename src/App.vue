@@ -1,23 +1,14 @@
-<script>
+<script setup>
 import NavbarView from './components/NavbarView.vue';
 import FooterView from './components/FooterView.vue';
 
-export default{
-  components: {
-    NavbarView,
-    FooterView
-  }
-
-}
 </script>
 <template>
-  <NavbarView />
   <!-- MAIN -->
-  <Transition>
-    <RouterView />
-  </Transition>
+  <RouterView name="NavbarView" />
+  <RouterView />
+  <RouterView name="FooterView" />
   <!-- #### -->
-  <FooterView />
 </template>
 <style>
 .v-enter-active,
