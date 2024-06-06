@@ -65,9 +65,11 @@ watch(search, ()=>{
                         </div>
                     </div>
                     <!-- profile -->
-                    <div class="rounded-full border p-1 mx-2">
-                        <img src="/src/assets/images/Image.png" alt="" class="w-10 h-10">
-                    </div>
+                    <router-link to="/profile">
+                        <div class="rounded-full border p-1 mx-2">
+                            <img src="/src/assets/images/Image.png" alt="" class="w-10 h-10">
+                        </div>
+                    </router-link>
                 </div>
             </div>
             <div class="mx-auto w-full p-1">
