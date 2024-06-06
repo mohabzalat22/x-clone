@@ -20,6 +20,10 @@ import FooterView from '@/components/FooterView.vue';
 import { ref } from 'vue';
 import axios from 'axios';
 
+axios.defaults.baseURL = 'http://localhost:8000';
+axios.defaults.withXSRFToken = true;
+axios.defaults.withCredentials = true;
+
 const routes = [
     {
         path: '/login',
@@ -94,26 +98,37 @@ const routes = [
     },
 ];
 const Auth = async (to, next)=>{
-    const res = await axios.get('http://localhost:8000/api/user', {  
-            validateStatus: function (status) {
-            // Allow all status codes
-                if(status == 200 || status == 401){
-                    return true;
-                }
+    const user = await axios.get('/api/user', {  
+        validateStatus: function (status) {
+        // Allow all status codes
+            if(status == 200 || status == 401){
+                return true;
             }
         }
-    );
-    if(res.status == 200){
-        localStorage.setItem('auth',true);
-    }
-    else if(res.status == 401){
+    });
+
+    console.log({'usercheck': user.data});
+
+    if(user.status == 401){
         localStorage.setItem('auth',false);
     }
+    else{
+        localStorage.setItem('auth',true);
+    }
 
-    console.log({'auth': localStorage.getItem('auth'), 'status': res.status});
+    const isAuthenticated = localStorage.getItem('auth').toLowerCase() == 'true';
 
-    if (to.path !== '/login' && !localStorage.getItem('auth')) next('/login')
-    else next()
+    console.log({'auth': isAuthenticated , 'status': user.status});
+    
+    console.log(isAuthenticated)
+    
+    if (to.path !== '/login' && !isAuthenticated)
+    {
+        next('/login');
+    }
+    else {
+        next();
+    }
 
 }
 const router = createRouter({
