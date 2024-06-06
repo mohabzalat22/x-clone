@@ -122,7 +122,7 @@ const Auth = async (to, next)=>{
     
     console.log(isAuthenticated)
     
-    if (to.path !== '/login' && !isAuthenticated)
+    if (!['/login', '/register'].includes(to.path) && !isAuthenticated)
     {
         next('/login');
     }
