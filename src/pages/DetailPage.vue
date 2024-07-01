@@ -15,8 +15,14 @@ axios.defaults.withCredentials = true;
 const route = useRoute();
 
 // side
-
-
+// loading states
+const review_load = ref(true);
+const dataDetail_load = ref(true);
+// end of loading states
+// error
+const error_message = ref('');
+const hideErrorMessage = ref(true);
+// end error
 const type = reactive({
     'sport': false,
     'suv': false,
@@ -64,82 +70,102 @@ const addStar = (n)=>{
 };
 
 const getSideData = async ()=>{
-    const res = await axios.get('/api/v1/category/data');
-    data.value = await res.data;
+    try{
+        const res = await axios.get('/api/v1/category/data');
+        data.value = await res.data;
+    }
+    catch(e){
+        hideErrorMessage.value = false;
+        error_message.value = 'Status' +' '+ e.response.status + ' Side Data.';
+    }
 };
 
 const getDetailData = async (id)=>{
-    const res = await axios.get(`/api/v1/detail/${id}`);
-    dataDetail.value = await res.data;
+    try{
+        const res = await axios.get(`/api/v1/detail/${id}`);
+        dataDetail.value = await res.data;
+        dataDetail_load.value = false;
+    }
+    catch(e){
+        hideErrorMessage.value = false;
+        error_message.value = 'Status' +' '+ e.response.status + ' Detail Data.';
+    }
 }
 
 const filter = async () =>{
-    const filteredType = [];
-    const filteredCapacity = [];
-    for(const [key, value] of Object.entries(type)){
-        if(value === true){
-            filteredType.push(key)
+    try{
+        const filteredType = [];
+        const filteredCapacity = [];
+        for(const [key, value] of Object.entries(type)){
+            if(value === true){
+                filteredType.push(key)
+            }
         }
-    }
-
-    for(const [key, value] of Object.entries(capacity)){
-        if(value === true){
-            filteredCapacity.push(key.replace('x',''))
-        }
-    }
-    const res = await axios.post(
-        '/api/v1/detail/filter',
-        {
-            'type': filteredType, 
-            'capacity': filteredCapacity,
-            'price': priceFilter.value
-        },
-    );
     
-    dataFilter.value = await res.data;
+        for(const [key, value] of Object.entries(capacity)){
+            if(value === true){
+                filteredCapacity.push(key.replace('x',''))
+            }
+        }
+        const res = await axios.post(
+            '/api/v1/detail/filter',
+            {
+                'type': filteredType, 
+                'capacity': filteredCapacity,
+                'price': priceFilter.value
+            },
+        );
+        
+        dataFilter.value = await res.data;
+    }
+    catch(e){
+        hideErrorMessage.value = false;
+        error_message.value = 'Status' +' '+ e.response.status + ' Cars Filter.';
+    }
 }
 
 const getUser = async() =>{
-    const res = await axios.get('/api/user');
-    user.value = await res.data.name;
-    profileImage.value = await res.data.image;
+    try{
+        const res = await axios.get('/api/user');
+        user.value = await res.data.name;
+        profileImage.value = await res.data.image;
+    }
+    catch(e){
+        hideErrorMessage.value = false;
+        error_message.value = 'Status' +' '+ e.response.status + ' User.';
+    }
 }
 
 const getReviews = async ()=>{
-    const user = await axios.get('/api/user');
-    const res = await axios.post('/api/user/data/reviews', {user: user.data});
-    reviews.value = await res.data;
+    try{
+        const route = useRoute();
+        const car_id = route.params.id;
+        console.log(car_id)
+        const user = await axios.get('/api/user');
+        const res = await axios.post('/api/user/data/reviews', {user: user.data, car_id: car_id});
+        reviews.value = await res.data;
+        review_load.value = false;
+    }
+    catch(e){
+        // hideErrorMessage.value = false;
+        // error_message.value = 'Status' +' '+ e.response.status + ' Reviews.';
+    }
 }
 
 onMounted(()=>{
+    const id = route.params.id;
     // side
     getSideData();
     //detail
-    const id = route.params.id;
     getDetailData(id);
     //getuser
     getUser();
+    //get review
     getReviews();
 });
 
 watch([type, capacity, priceFilter], ()=>{
-    filter();
-    // .then(()=>{
-    //     const swiper = new Swiper('.swiper', {
-    //         slidesPerView: 1,
-    //         modules: [Pagination],
-    //         pagination: {
-    //             el: '.swiper-pagination',
-    //             clickable: true,
-    //         },
-    //         breakpoints:{
-    //             768 :{
-    //                 slidesPerView: 3,
-    //             },
-    //         }
-    //     });
-    // });
-    // filter
+    filter()
 },
 { immediate: true });
 
@@ -149,16 +175,24 @@ watch([type, capacity, priceFilter], ()=>{
 const descriptionClick = ref(false);
 
 const sendReview = async() =>{
-    let starsCount = stars.value.length ? stars.value[stars.value.length-1] : 0 ;
-    const user = await axios.get('/api/user');
-    const res = await axios.post('/api/user/data/make/review',
-    {
-        'car_id': route.params.id,
-        'user': user.data,
-        'review': review.value,
-        'stars': starsCount,
-    });
-    console.log(res.data);
+    try{
+        let starsCount = stars.value.length ? stars.value[stars.value.length-1] : 0 ;
+        const user = await axios.get('/api/user');
+        const res = await axios.post('/api/user/data/make/review',
+        {
+            'car_id': route.params.id,
+            'user': user.data,
+            'review': review.value,
+            'stars': starsCount,
+        });
+        // console.log(res.data);
+        hideErrorMessage.value = false;
+        error_message.value = 'Review Sent';
+    }
+    catch(e){
+        hideErrorMessage.value = false;
+        error_message.value = 'Status' +' '+ e.response.status + ' Send Reviews.';
+    }
 }
 // modal
 const modal = ref(false);
@@ -167,9 +201,28 @@ const modal = ref(false);
 <template>
   <div class="bg-white">
       <div class="xl:container mx-auto relative">
+        <!-- toast measage -->
+         <div class="flex justify-end p-1">
+             <div v-if="!hideErrorMessage" id="toast-undo" class="bg-gray-800 flex items-center w-full max-w-xs p-4 text-white rounded-lg shadow dark:text-gray-400 dark:bg-gray-800" role="alert">
+                 <div class="text-sm font-normal">
+                 {{ error_message }}
+                 </div>
+                 <div class="flex items-center ms-auto space-x-2 rtl:space-x-reverse">
+                     <button @click="hideErrorMessage = true" type="button" class="ms-auto -mx-1.5 -my-1.5 bg-white text-gray-400 hover:text-gray-900 rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5 hover:bg-gray-100 inline-flex items-center justify-center h-8 w-8 dark:text-gray-500 dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700" data-dismiss-target="#toast-undo" aria-label="Close">
+                        <span class="sr-only">Close</span>
+                        <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                        </svg>
+                    </button>
+                 </div>
+             </div>
+         </div>
         <!-- modal -->
         <div class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-1/2 max-h-1/2 z-50" :class="{'hidden': !modal}">
             <div class="bg-gray-100 p-8 rounded-lg border shadow">
+                <div class="flex justify-end">
+                    <button @click="modal=false"><svg class="w-8 h-8" fill="gray" style="enable-background:new 0 0 512 512;" version="1.1" viewBox="0 0 512 512" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><path d="M443.6,387.1L312.4,255.4l131.5-130c5.4-5.4,5.4-14.2,0-19.6l-37.4-37.6c-2.6-2.6-6.1-4-9.8-4c-3.7,0-7.2,1.5-9.8,4  L256,197.8L124.9,68.3c-2.6-2.6-6.1-4-9.8-4c-3.7,0-7.2,1.5-9.8,4L68,105.9c-5.4,5.4-5.4,14.2,0,19.6l131.5,130L68.4,387.1  c-2.6,2.6-4.1,6.1-4.1,9.8c0,3.7,1.4,7.2,4.1,9.8l37.4,37.6c2.7,2.7,6.2,4.1,9.8,4.1c3.5,0,7.1-1.3,9.8-4.1L256,313.1l130.7,131.1  c2.7,2.7,6.2,4.1,9.8,4.1c3.5,0,7.1-1.3,9.8-4.1l37.4-37.6c2.6-2.6,4.1-6.1,4.1-9.8C447.7,393.2,446.2,389.7,443.6,387.1z"/></svg></button>
+                </div>
                 <div class="flex my-6">
                     <div class="flex-shrink-0">
                         <img :src="profileImage" alt="" class="w-12 h-12 rounded-full">
@@ -322,7 +375,16 @@ const modal = ref(false);
                                 <div class="w-full xl:w-[450px] xl:h-[360] bg-blue-500 rounded-lg">
                                     <img :src="dataDetail.background" alt="">
                                 </div>
-                                <div class="flex mt-6">
+                                <div v-if="dataDetail_load" class="flex justify-center items-center rounded bg-gray-200 h-[300px]">                      
+                                    <div role="status">
+                                        <svg aria-hidden="true" class="w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="currentColor"/>
+                                            <path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentFill"/>
+                                        </svg>
+                                        <span class="sr-only">Loading...</span>
+                                    </div>
+                                </div>
+                                <div v-else class="flex mt-6">
                                     <div class="w-[150px] h-[90px] bg-blue-500 rounded-lg m-1 flex items-center">
                                         <img :src="dataDetail.image" alt="">
                                     </div>
@@ -336,7 +398,16 @@ const modal = ref(false);
                             </div>
                         </div>
                         <!-- right - side -->
-                        <div class="bg-white flex flex-col justify-center rounded-lg p-6 xl:mx-6">
+                         <div v-if="dataDetail_load" class="flex justify-center items-center">         
+                             <div role="status">
+                                 <svg aria-hidden="true" class="w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                     <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="currentColor"/>
+                                     <path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentFill"/>
+                                 </svg>
+                                 <span class="sr-only">Loading...</span>
+                             </div>
+                         </div>                   
+                        <div v-else class="bg-white flex flex-col justify-center rounded-lg p-6 xl:mx-6">
                             <div>
                                 <div class="flex justify-between">
                                     <div>
@@ -432,7 +503,17 @@ const modal = ref(false);
                                 </button>
                             </div>
                             <!-- persons -->
-                            <div class="divide-y">
+                             <div v-if="review_load" class="flex justify-center">
+                                 <div class="m-2" role="status">
+                                     <svg aria-hidden="true" class="w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                         <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="currentColor"/>
+                                         <path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentFill"/>
+                                     </svg>
+                                     <span class="sr-only">Loading...</span>
+                                 </div>
+                             </div>
+
+                            <div v-else class="divide-y">
                                 <div class="my-6">
                                     <div v-for="item in reviews" class="flex mt-6">
                                         <div class="flex-shrink-0">
@@ -442,7 +523,7 @@ const modal = ref(false);
                                             <div class="flex justify-between">
                                                 <h3 class="text-gray-800 font-bold text-xl">{{ user }}</h3>
                                                 <div>
-                                                    <p class="text-sm text-gray-400">21 July 2022</p>
+                                                    <p class="text-sm text-gray-400">{{ item.created_at }}</p>
                                                 </div>
                                             </div>
                                             <div class="flex justify-between">
